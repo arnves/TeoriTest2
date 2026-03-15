@@ -6,9 +6,16 @@ node_modules/
 .env
 .env.local
 .DS_Store
+*.pdf
+.venv/
+venv/
+__pycache__/
 
 # Generated Question Cache
 .cache/
+
+# Redundant DB in root (app uses public/teoriprove.db)
+teoriprove.db
 
 # Artifacts
 .gemini/
