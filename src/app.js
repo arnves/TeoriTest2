@@ -95,12 +95,18 @@ function renderDashboard() {
             </div>
         </div>
 
-        <button id="start-main-quiz" class="next-btn" style="display: block; width: 250px; background: white; color: var(--primary); font-size: 1.2rem; height: auto; padding: 1.2rem;">
-            START TEORIPRØVE
-        </button>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; justify-content: center;">
+            <button id="start-training-quiz" class="next-btn" style="display: block; width: 220px; background: rgba(255,255,255,0.1); border: 1px solid white; color: white; font-size: 1rem; height: auto; padding: 1rem;">
+                LYNTRENING (10 SPØRSMÅL)
+            </button>
+            <button id="start-main-quiz" class="next-btn" style="display: block; width: 250px; background: white; color: var(--primary); font-size: 1.1rem; height: auto; padding: 1.1rem; font-weight: 800;">
+                FULL EKSAMEN (45 SPØRSMÅL)
+            </button>
+        </div>
     `;
     categoryGrid.appendChild(hero);
-    document.getElementById('start-main-quiz').onclick = () => startUnifiedQuiz();
+    document.getElementById('start-main-quiz').onclick = () => startUnifiedQuiz(45, 'exam');
+    document.getElementById('start-training-quiz').onclick = () => startUnifiedQuiz(10, 'training');
 
     // Stats Section
     const statsHeader = document.createElement('h3');
@@ -156,18 +162,30 @@ function renderDashboard() {
 
         progress.quizzes.slice(-5).reverse().forEach(quiz => {
             const date = new Date(quiz.timestamp).toLocaleDateString();
-            const pass = quiz.correct >= 38; // standard pass
+            const isExam = quiz.type === 'exam';
+            const pass = quiz.correct >= 38;
+
             const item = document.createElement('div');
             item.style.display = 'flex';
             item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
             item.style.padding = '0.75rem';
             item.style.borderBottom = '1px solid var(--glass-border)';
+
+            const typeLabel = isExam ? '<span style="opacity: 0.6; font-size: 0.8rem;">Eksamen</span>' : '<span style="opacity: 0.6; font-size: 0.8rem;">Trening</span>';
+            const statusLabel = isExam
+                ? `<span style="color: ${pass ? 'var(--success)' : 'var(--error)'}; font-weight: 700;">${pass ? 'BESTÅTT' : 'IKKE BESTÅTT'}</span>`
+                : `<span style="color: var(--text-muted); font-size: 0.8rem;">Fullført</span>`;
+
             item.innerHTML = `
-                <span>${date}</span>
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 0.9rem;">${date}</span>
+                    ${typeLabel}
+                </div>
                 <span style="font-weight: 700;">${quiz.correct} / ${quiz.total}</span>
-                <span style="color: ${pass ? 'var(--success)' : 'var(--error)'}; font-weight: 700;">
-                    ${pass ? 'BESTÅTT' : 'IKKE BESTÅTT'}
-                </span>
+                <div style="width: 100px; text-align: right;">
+                    ${statusLabel}
+                </div>
             `;
             historyList.appendChild(item);
         });
@@ -175,17 +193,20 @@ function renderDashboard() {
     }
 }
 
-function startUnifiedQuiz() {
+let activeQuizType = 'exam';
+
+function startUnifiedQuiz(length = 45, type = 'exam') {
     const progress = ProgressManager.get();
     const catKeys = Object.keys(progress.categories);
     const avgCompetence = catKeys.length > 0
         ? catKeys.reduce((acc, cat) => acc + progress.categories[cat].competence, 0) / catKeys.length
         : 0;
 
+    activeQuizType = type;
     const weights = getDifficultyWeights(avgCompetence);
     const masteredUuids = ProgressManager.getMasteredUuids();
 
-    currentQuiz = getAdaptiveQuestions(null, weights, 45, masteredUuids);
+    currentQuiz = getAdaptiveQuestions(null, weights, length, masteredUuids);
     currentQuestionIndex = 0;
     quizScore = 0;
 
@@ -257,7 +278,7 @@ nextBtn.onclick = () => {
 };
 
 function finishQuiz() {
-    ProgressManager.trackQuizResult(quizScore, currentQuiz.length);
+    ProgressManager.trackQuizResult(quizScore, currentQuiz.length, activeQuizType);
     renderDashboard();
     dashboardView.style.display = 'block';
     quizView.style.display = 'none';

@@ -80,12 +80,13 @@ export const ProgressManager = {
         return Object.keys(progress.answered).filter(uuid => progress.answered[uuid].mastered);
     },
 
-    trackQuizResult(correct, total) {
+    trackQuizResult(correct, total, type) {
         const progress = this.get();
         progress.quizzes.push({
             timestamp: Date.now(),
             correct,
-            total
+            total,
+            type // 'training' or 'exam'
         });
         // Keep last 50 quizzes
         if (progress.quizzes.length > 50) progress.quizzes.shift();
