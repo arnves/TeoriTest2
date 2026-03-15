@@ -1,0 +1,17 @@
+# Node
+node_modules/
+.npm/
+
+# Local Dev
+.env
+.env.local
+.DS_Store
+
+# Generated Question Cache
+.cache/
+
+# Artifacts
+.gemini/
+.agents/
+_agent/
+brain/

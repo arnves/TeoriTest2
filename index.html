@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeoriTest2 - Din vei til lappen</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- sql.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>TeoriTest2</h1>
+            <div id="overall-stats" class="stats">
+                <!-- Overall progress placeholder -->
+            </div>
+        </header>
+
+        <main id="app-content">
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="fade-in">
+                <h2 style="margin-bottom: 2rem;">Velg Kategori</h2>
+                <div id="category-grid" class="dashboard">
+                    <!-- Categories will be injected here -->
+                </div>
+                <div class="reset-container">
+                    <button id="show-reset-modal" class="danger-btn-text">Slett all fremgang og tilbakestill
+                        statistikk</button>
+                </div>
+            </section>
+
+            <!-- Quiz View -->
+            <section id="quiz-view" class="quiz-section fade-in">
+                <div class="question-header"
+                    style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <button id="back-to-dashboard" class="option-btn"
+                        style="padding: 0.5rem 1rem; font-size: 0.8rem;">Tilbake</button>
+                    <span id="question-counter" class="stats">Spørsmål 1 / 10</span>
+                </div>
+                <div id="question-container" class="question-card">
+                    <div id="question-text" class="question-text">Laster spørsmål...</div>
+                    <div id="options-grid" class="options-grid">
+                        <!-- Options will be injected here -->
+                    </div>
+                    <div id="feedback-area" class="feedback">
+                        <div id="feedback-status" style="font-weight: 700; margin-bottom: 0.5rem;"></div>
+                        <div id="explanation-text" class="explanation"></div>
+                    </div>
+                    <button id="next-question" class="next-btn">Neste spørsmål</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Er du sikker?</h2>
+            <p>Dette vil slette all din besvarte historikk, mestrede spørsmål og statistikk permanent. Handlingen kan
+                ikke angres.</p>
+            <div class="modal-actions">
+                <button id="cancel-reset" class="modal-btn cancel">Avbryt</button>
+                <button id="confirm-reset" class="modal-btn confirm">Ja, slett alt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="src/app.js"></script>
+</body>
+
+</html>
